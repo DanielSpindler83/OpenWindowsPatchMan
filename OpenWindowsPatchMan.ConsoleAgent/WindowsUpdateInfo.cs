@@ -2,8 +2,8 @@
 
 public class WindowsUpdateInfo
 {
-    public string Title { get; set; }
-    public string Description { get; set; }
+    public string Title { get; set; } = String.Empty;
+    public string Description { get; set; } = String.Empty;
     public List<string> KBArticleIDs { get; set; }
     public List<string> Categories { get; set; }
     public double DownloadSizeMB { get; set; }

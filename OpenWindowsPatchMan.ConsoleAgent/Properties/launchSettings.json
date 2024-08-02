@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "OpenWindowsPatchMan.ConsoleAgent": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

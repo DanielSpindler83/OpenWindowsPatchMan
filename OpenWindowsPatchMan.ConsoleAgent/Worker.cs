@@ -8,6 +8,8 @@ using WUApiLib;
 
 namespace OpenWindowsPatchMan.ConsoleAgent;
 
+// https://learn.microsoft.com/en-us/windows/win32/api/_wua/
+
 public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
