@@ -1,5 +1,7 @@
 ﻿
 
+using Dapper;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -25,20 +27,52 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        InitializeDatabase();  // Ensure the database and table are created
+
         while (!stoppingToken.IsCancellationRequested)
         {
             _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
 
             List<WindowsUpdateInfo> updatesInfo = CheckForUpdates();
 
-            string resultFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"UpdateCheck_{DateTime.Now:yyyyMMdd_HHmmss}.json");
-            File.WriteAllText(resultFilePath, JsonSerializer.Serialize(updatesInfo, new JsonSerializerOptions { WriteIndented = true }));
+            using var connection = new SqliteConnection("Data Source=updates.db");
+            foreach (var update in updatesInfo)
+            {
+                connection.Execute(@"
+                    INSERT INTO WindowsUpdateInfo (Title, Description, KBArticleIDs, Categories, DownloadSizeMB, MoreInfoUrls)
+                    VALUES (@Title, @Description, @KBArticleIDs, @Categories, @DownloadSizeMB, @MoreInfoUrls)",
+                    new
+                    {
+                        Title = update.Title,
+                        Description = update.Description,
+                        KBArticleIDs = string.Join(", ", update.KBArticleIDs),
+                        Categories = string.Join(", ", update.Categories),
+                        DownloadSizeMB = update.DownloadSizeMB,
+                        MoreInfoUrls = string.Join(", ", update.MoreInfoUrls)
+                    });
+            }
 
-            _logger.LogInformation("Update check completed. Results saved to {path}", resultFilePath);
+            _logger.LogInformation("Update check completed. Results saved to database.");
 
             await Task.Delay(_checkInterval, stoppingToken);
         }
     }
+
+    private void InitializeDatabase()
+    {
+        using var connection = new SqliteConnection("Data Source=updates.db");
+        connection.Execute(@"
+        CREATE TABLE IF NOT EXISTS WindowsUpdateInfo (
+            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            Title TEXT,
+            Description TEXT,
+            KBArticleIDs TEXT,
+            Categories TEXT,
+            DownloadSizeMB REAL,
+            MoreInfoUrls TEXT
+        )");
+    }
+
 
     private List<WindowsUpdateInfo> CheckForUpdates()
     {
