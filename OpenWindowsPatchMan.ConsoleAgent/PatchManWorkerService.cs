@@ -11,14 +11,15 @@ using WUApiLib;
 namespace OpenWindowsPatchMan.ConsoleAgent;
 
 // https://learn.microsoft.com/en-us/windows/win32/api/_wua/
+// https://learn.microsoft.com/en-us/windows/win32/wua_sdk/windows-update-agent--wua--api-reference
 
-public class Worker : BackgroundService
+public class PatchManWorkerService : BackgroundService
 {
-    private readonly ILogger<Worker> _logger;
+    private readonly ILogger<PatchManWorkerService> _logger;
     private readonly IConfiguration _configuration;
     private TimeSpan _checkInterval;
 
-    public Worker(ILogger<Worker> logger, IConfiguration configuration)
+    public PatchManWorkerService(ILogger<PatchManWorkerService> logger, IConfiguration configuration)
     {
         _logger = logger;
         _configuration = configuration;
@@ -31,7 +32,11 @@ public class Worker : BackgroundService
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+            _logger.LogInformation("PatchManWorkerService running at: {time}", DateTimeOffset.Now);
+
+            // Checks if automatic updates are enabled
+            AutomaticUpdates automaticUpdates = new AutomaticUpdates();
+            var automaticUpdatesEnabled = automaticUpdates.ServiceEnabled;
 
             List<WindowsUpdateInfo> updatesInfo = CheckForUpdates();
 
@@ -39,10 +44,11 @@ public class Worker : BackgroundService
             foreach (var update in updatesInfo)
             {
                 connection.Execute(@"
-                    INSERT INTO WindowsUpdateInfo (Title, Description, KBArticleIDs, Categories, DownloadSizeMB, MoreInfoUrls)
-                    VALUES (@Title, @Description, @KBArticleIDs, @Categories, @DownloadSizeMB, @MoreInfoUrls)",
+                    INSERT INTO WindowsUpdateInfo (UpdateCheckTime, Title, Description, KBArticleIDs, Categories, DownloadSizeMB, MoreInfoUrls)
+                    VALUES (@UpdateCheckTime,@Title, @Description, @KBArticleIDs, @Categories, @DownloadSizeMB, @MoreInfoUrls)",
                     new
                     {
+                        UpdateCheckTime = update.UpdateCheckTime.ToString("o"),
                         Title = update.Title,
                         Description = update.Description,
                         KBArticleIDs = string.Join(", ", update.KBArticleIDs),
@@ -64,6 +70,7 @@ public class Worker : BackgroundService
         connection.Execute(@"
         CREATE TABLE IF NOT EXISTS WindowsUpdateInfo (
             Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            UpdateCheckTime TEXT,
             Title TEXT,
             Description TEXT,
             KBArticleIDs TEXT,
@@ -82,7 +89,10 @@ public class Worker : BackgroundService
         {
             UpdateSession updateSession = new UpdateSession();
             IUpdateSearcher updateSearcher = updateSession.CreateUpdateSearcher();
-            ISearchResult searchResult = updateSearcher.Search("IsInstalled=0");
+            //ISearchResult searchResult = updateSearcher.Search("IsInstalled=0 And IsHidden=0");
+            ISearchResult searchResult = updateSearcher.Search("");
+
+            var updateCheckTime = DateTimeOffset.Now;
 
             foreach (IUpdate update in searchResult.Updates)
             {
@@ -90,9 +100,10 @@ public class Worker : BackgroundService
 
                 WindowsUpdateInfo updateInfo = new WindowsUpdateInfo
                 {
+                    UpdateCheckTime = updateCheckTime,
                     Title = update.Title,
                     Description = update.Description,
-                    DownloadSizeMB = downloadSizeMB
+                    DownloadSizeMB = downloadSizeMB,
                 };
 
                 foreach (string kbId in update.KBArticleIDs)
