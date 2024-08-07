@@ -41,10 +41,20 @@ public class PatchManWorkerService : BackgroundService
 
             List<WindowsUpdateInfo> updatesInfo = CheckForUpdates();
 
-            using var connection = new SqliteConnection("Data Source=updates.db");
-            foreach (var updateInfo in updatesInfo)
-            {
-                connection.Execute(@"
+            using SqliteConnection connection = SaveUpdateInfoToDatabase(updatesInfo, _logger);
+
+            // InstallUpdates(searchResult.Updates);
+
+            await Task.Delay(_checkInterval, stoppingToken);
+        }
+    }
+
+    private static SqliteConnection SaveUpdateInfoToDatabase(List<WindowsUpdateInfo> updatesInfo, ILogger<PatchManWorkerService> _logger)
+    {
+        var connection = new SqliteConnection("Data Source=updates.db");
+        foreach (var updateInfo in updatesInfo)
+        {
+            connection.Execute(@"
                     INSERT INTO WindowsUpdateInfo (
                         UpdateCheckTime, 
                         Title, 
@@ -98,41 +108,39 @@ public class PatchManWorkerService : BackgroundService
                         @SecurityBulletinIDs,
                         @BundledUpdates
                     )",
-                                new
-                                {
-                                    UpdateCheckTime = updateInfo.UpdateCheckTime.ToString("o"),
-                                    Title = updateInfo.Title,
-                                    Description = updateInfo.Description,
-                                    KBArticleIDs = string.Join(", ", updateInfo.KBArticleIDs),
-                                    Categories = string.Join(", ", updateInfo.Categories),
-                                    DownloadSizeMB = updateInfo.DownloadSizeMB,
-                                    MoreInfoUrls = string.Join(", ", updateInfo.MoreInfoUrls),
-                                    DatePublished = updateInfo.DatePublished.ToString("o"),
-                                    DeploymentAction = updateInfo.DeploymentAction,
-                                    IsBeta = updateInfo.IsBeta ? 1 : 0,
-                                    IsDownloaded = updateInfo.IsDownloaded ? 1 : 0,
-                                    IsHidden = updateInfo.IsHidden ? 1 : 0,
-                                    IsInstalled = updateInfo.IsInstalled ? 1 : 0,
-                                    IsMandatory = updateInfo.IsMandatory ? 1 : 0,
-                                    InstallationRebootBehavior = updateInfo.InstallationRebootBehavior,
-                                    IsUninstallable = updateInfo.IsUninstallable ? 1 : 0,
-                                    ReleaseNotes = updateInfo.ReleaseNotes,
-                                    UninstallationSteps = updateInfo.UninstallationSteps,
-                                    UninstallationNotes = updateInfo.UninstallationNotes,
-                                    UninstallationRebootBehavior = updateInfo.UninstallationRebootBehavior,
-                                    Type = updateInfo.Type,
-                                    SupportUrl = updateInfo.SupportUrl,
-                                    SupersededUpdateIDs = string.Join(", ", updateInfo.SupersededUpdateIDs),
-                                    SecurityBulletinIDs = string.Join(", ", updateInfo.SecurityBulletinIDs),
-                                    BundledUpdates = string.Join(", ", updateInfo.BundledUpdates)
-                                });
-                        }
-
-
-            _logger.LogInformation("Update check completed. Results saved to database.");
-
-            await Task.Delay(_checkInterval, stoppingToken);
+                            new
+                            {
+                                UpdateCheckTime = updateInfo.UpdateCheckTime.ToString("o"),
+                                Title = updateInfo.Title,
+                                Description = updateInfo.Description,
+                                KBArticleIDs = string.Join(", ", updateInfo.KBArticleIDs),
+                                Categories = string.Join(", ", updateInfo.Categories),
+                                DownloadSizeMB = updateInfo.DownloadSizeMB,
+                                MoreInfoUrls = string.Join(", ", updateInfo.MoreInfoUrls),
+                                DatePublished = updateInfo.DatePublished.ToString("o"),
+                                DeploymentAction = updateInfo.DeploymentAction,
+                                IsBeta = updateInfo.IsBeta ? 1 : 0,
+                                IsDownloaded = updateInfo.IsDownloaded ? 1 : 0,
+                                IsHidden = updateInfo.IsHidden ? 1 : 0,
+                                IsInstalled = updateInfo.IsInstalled ? 1 : 0,
+                                IsMandatory = updateInfo.IsMandatory ? 1 : 0,
+                                InstallationRebootBehavior = updateInfo.InstallationRebootBehavior,
+                                IsUninstallable = updateInfo.IsUninstallable ? 1 : 0,
+                                ReleaseNotes = updateInfo.ReleaseNotes,
+                                UninstallationSteps = updateInfo.UninstallationSteps,
+                                UninstallationNotes = updateInfo.UninstallationNotes,
+                                UninstallationRebootBehavior = updateInfo.UninstallationRebootBehavior,
+                                Type = updateInfo.Type,
+                                SupportUrl = updateInfo.SupportUrl,
+                                SupersededUpdateIDs = string.Join(", ", updateInfo.SupersededUpdateIDs),
+                                SecurityBulletinIDs = string.Join(", ", updateInfo.SecurityBulletinIDs),
+                                BundledUpdates = string.Join(", ", updateInfo.BundledUpdates)
+                            });
         }
+
+        _logger.LogInformation("Update check results saved to database.");
+
+        return connection;
     }
 
     private void InitializeDatabase()
@@ -259,6 +267,20 @@ public class PatchManWorkerService : BackgroundService
         }
 
         return updatesInfo;
+    }
+
+
+    private void InstallUpdates(UpdateCollection updates)
+    {
+        UpdateSession updateSession = new UpdateSession();
+        IUpdateInstaller updateInstaller = updateSession.CreateUpdateInstaller();
+        updateInstaller.Updates = updates;
+
+        Console.WriteLine("Starting installation...");
+        IInstallationResult installationResult = updateInstaller.Install();
+
+        Console.WriteLine($"Installation result: {installationResult.ResultCode}");
+        Console.WriteLine($"Reboot required: {installationResult.RebootRequired}");
     }
 
 }
