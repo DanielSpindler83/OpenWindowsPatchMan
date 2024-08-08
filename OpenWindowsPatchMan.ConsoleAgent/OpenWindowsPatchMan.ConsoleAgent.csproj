@@ -8,6 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="README" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="README">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
     <COMReference Include="WUApiLib">
       <WrapperTool>tlbimp</WrapperTool>
       <VersionMinor>0</VersionMinor>
