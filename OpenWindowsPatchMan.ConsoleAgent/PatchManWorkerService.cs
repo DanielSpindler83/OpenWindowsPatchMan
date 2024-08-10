@@ -1,12 +1,8 @@
 ﻿
 
-using Dapper;
-using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using OpenWindowsPatchMan.ConsoleAgent.Enums;
-using WUApiLib;
 
 namespace OpenWindowsPatchMan.ConsoleAgent;
 

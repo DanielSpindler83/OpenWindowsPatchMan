@@ -2,32 +2,34 @@
 
 public class WindowsUpdateInfo
 {
+    public int WindowsUpdateInfoEntryId { get; set; }
     public DateTimeOffset UpdateCheckTime { get; set; } = DateTimeOffset.Now;
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public List<string> KBArticleIDs { get; set; }
+    public List<string>? KBArticleIDs { get; set; }
     public List<string> Categories { get; set; }
     public double DownloadSizeMB { get; set; }
-    public List<string> MoreInfoUrls { get; set; }
+    public List<string>? MoreInfoUrls { get; set; }
     public DateTime DatePublished { get; set; }
-
-    public string DeploymentAction { get; set; } = string.Empty;
+    public string? DeploymentAction { get; set; } = string.Empty;
     public bool IsBeta { get; set; } = false;
     public bool IsDownloaded { get; set; } = false;
     public bool IsHidden { get; set; } = false;
     public bool IsInstalled { get; set; } = false;
     public bool IsMandatory { get; set; } = false;
-    public string InstallationRebootBehavior { get; set; } = string.Empty;
+    public string? InstallationRebootBehavior { get; set; } = string.Empty;
     public bool IsUninstallable { get; set; } = false;
-    public string ReleaseNotes { get; set; } = string.Empty;
-    public List<string> UninstallationSteps { get; set; }
-    public string UninstallationNotes { get; set; } = string.Empty;
-    public List<string> SupersededUpdateIDs { get; set; }
-    public List<string> SecurityBulletinIDs { get; set; }
-    public string UninstallationRebootBehavior { get; set; } = string.Empty;
+    public string? ReleaseNotes { get; set; } = string.Empty;
+    public List<string>? UninstallationSteps { get; set; }
+    public string? UninstallationNotes { get; set; } = string.Empty;
+    public List<string>? SupersededUpdateIDs { get; set; }
+    public List<string>? SecurityBulletinIDs { get; set; }
+    public string? UninstallationRebootBehavior { get; set; } = string.Empty;
     public string Type { get; set; } = string.Empty;
-    public string SupportUrl { get; set; } = string.Empty;
-    public List<string> BundledUpdates { get; set; }
+    public string? SupportUrl { get; set; } = string.Empty;
+    public List<string>? BundledUpdates { get; set; }
+    // public string InstallationResultCode { get; set; } = string.Empty; // unsure if needed and not implemented yet - maybe should be on an updateInstallResult class?
+    // public bool RebootRequired { get; set; } // unsure if needed and not implemented yet - maybe should be on an updateInstallResult class?
 
     public WindowsUpdateInfo()
     {
@@ -66,5 +68,8 @@ public class WindowsUpdateInfo
                $"Type: {Type}\n" +
                $"Support URL: {SupportUrl}\n" +
                $"Bundled Updates: {string.Join(", ", BundledUpdates)}";
+               //$"Support URL: {InstallationResultCode}\n" +
+               //$"Support URL: {RebootRequired}\n";
+
     }
 }
