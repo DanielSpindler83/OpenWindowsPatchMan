@@ -1,5 +1,5 @@
 ﻿
-namespace OpenWindowsPatchMan.ConsoleAgent.Enums;
+namespace OpenWindowsPatchMan.Agent.Service.Enums;
 
 public enum DeploymentActionEnum
 {

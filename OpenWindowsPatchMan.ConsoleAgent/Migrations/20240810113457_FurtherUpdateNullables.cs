@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace OpenWindowsPatchMan.ConsoleAgent.Migrations
+namespace OpenWindowsPatchMan.Agent.Service.Migrations
 {
     /// <inheritdoc />
     public partial class FurtherUpdateNullables : Migration

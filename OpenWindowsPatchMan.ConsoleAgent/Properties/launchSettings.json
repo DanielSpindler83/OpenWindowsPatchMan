@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "OpenWindowsPatchMan.ConsoleAgent": {
+    "OpenWindowsPatchMan.Agent.Service": {
       "commandName": "Project",
       "nativeDebugging": true
     }

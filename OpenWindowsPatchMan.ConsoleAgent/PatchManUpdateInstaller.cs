@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
+using OpenWindowsPatchMan.Agent.Core.Models;
 using WUApiLib;
 
-namespace OpenWindowsPatchMan.ConsoleAgent;
+namespace OpenWindowsPatchMan.Agent.Service;
 
 public class PatchManUpdateInstaller : IPatchManUpdateInstaller
 {

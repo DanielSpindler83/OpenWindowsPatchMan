@@ -1,10 +1,9 @@
-﻿
-
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OpenWindowsPatchMan.Agent.Core.Models;
 
-namespace OpenWindowsPatchMan.ConsoleAgent;
+namespace OpenWindowsPatchMan.Agent.Service;
 
 public class PatchManWorkerService : BackgroundService
 {

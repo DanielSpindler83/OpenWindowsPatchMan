@@ -1,4 +1,4 @@
-﻿namespace OpenWindowsPatchMan.ConsoleAgent;
+﻿namespace OpenWindowsPatchMan.Agent.Core.Models;
 
 public class WindowsUpdateInfo
 {
@@ -68,8 +68,8 @@ public class WindowsUpdateInfo
                $"Type: {Type}\n" +
                $"Support URL: {SupportUrl}\n" +
                $"Bundled Updates: {string.Join(", ", BundledUpdates)}";
-               //$"Support URL: {InstallationResultCode}\n" +
-               //$"Support URL: {RebootRequired}\n";
+        //$"Support URL: {InstallationResultCode}\n" +
+        //$"Support URL: {RebootRequired}\n";
 
     }
 }

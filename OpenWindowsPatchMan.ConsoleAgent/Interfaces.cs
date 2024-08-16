@@ -1,10 +1,11 @@
-﻿using System;
+﻿using OpenWindowsPatchMan.Agent.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenWindowsPatchMan.ConsoleAgent;
+namespace OpenWindowsPatchMan.Agent.Service;
 
 public interface IPatchManUpdateChecker
 {

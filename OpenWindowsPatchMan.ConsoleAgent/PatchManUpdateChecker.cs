@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
-using OpenWindowsPatchMan.ConsoleAgent.Enums;
+using OpenWindowsPatchMan.Agent.Core.Models;
+using OpenWindowsPatchMan.Agent.Service.Enums;
 using WUApiLib;
 
-namespace OpenWindowsPatchMan.ConsoleAgent;
+namespace OpenWindowsPatchMan.Agent.Service;
 
 public class PatchManUpdateChecker : IPatchManUpdateChecker
 {

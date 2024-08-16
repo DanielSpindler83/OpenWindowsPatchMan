@@ -1,5 +1,6 @@
-﻿
-namespace OpenWindowsPatchMan.ConsoleAgent;
+﻿using OpenWindowsPatchMan.Agent.Core.Models;
+
+namespace OpenWindowsPatchMan.Agent.Service;
 
 public class PatchManUpdateFilter : IPatchManUpdateFilter
 {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OpenWindowsPatchMan.Agent.Core.Models;
 
-namespace OpenWindowsPatchMan.ConsoleAgent;
+namespace OpenWindowsPatchMan.Agent.Service;
 
 public class UpdateContext : DbContext
 {

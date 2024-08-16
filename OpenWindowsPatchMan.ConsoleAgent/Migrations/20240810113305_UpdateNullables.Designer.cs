@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using OpenWindowsPatchMan.ConsoleAgent;
+using OpenWindowsPatchMan.Agent.Service;
 
 #nullable disable
 
-namespace OpenWindowsPatchMan.ConsoleAgent.Migrations
+namespace OpenWindowsPatchMan.Agent.Service.Migrations
 {
     [DbContext(typeof(UpdateContext))]
     [Migration("20240810113305_UpdateNullables")]
@@ -20,7 +20,7 @@ namespace OpenWindowsPatchMan.ConsoleAgent.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.7");
 
-            modelBuilder.Entity("OpenWindowsPatchMan.ConsoleAgent.WindowsUpdateInfo", b =>
+            modelBuilder.Entity("OpenWindowsPatchMan.Agent.Service.WindowsUpdateInfo", b =>
                 {
                     b.Property<int>("WindowsUpdateInfoEntryId")
                         .ValueGeneratedOnAdd()
