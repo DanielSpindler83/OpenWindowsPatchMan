@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OpenWindowsPatchMan.Agent.Core;
 using OpenWindowsPatchMan.Agent.Core.Models;
 
 namespace OpenWindowsPatchMan.Agent.Service;

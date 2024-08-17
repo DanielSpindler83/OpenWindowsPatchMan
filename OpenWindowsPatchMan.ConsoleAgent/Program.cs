@@ -2,6 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OpenWindowsPatchMan.Agent.Core;
+using OpenWindowsPatchMan.Agent.Core.Database;
+using OpenWindowsPatchMan.Agent.Core.Services;
 
 
 namespace OpenWindowsPatchMan.Agent.Service;

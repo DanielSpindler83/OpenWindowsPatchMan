@@ -1,6 +1,7 @@
-﻿using OpenWindowsPatchMan.Agent.Core.Models;
+﻿using OpenWindowsPatchMan.Agent.Core;
+using OpenWindowsPatchMan.Agent.Core.Models;
 
-namespace OpenWindowsPatchMan.Agent.Service;
+namespace OpenWindowsPatchMan.Agent.Core.Services;
 
 public class PatchManUpdateFilter : IPatchManUpdateFilter
 {

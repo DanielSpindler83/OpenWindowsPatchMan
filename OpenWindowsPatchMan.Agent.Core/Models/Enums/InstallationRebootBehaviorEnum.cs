@@ -1,4 +1,5 @@
-﻿namespace OpenWindowsPatchMan.Agent.Service.Enums;
+﻿namespace OpenWindowsPatchMan.Agent.Core.Models.Enums;
+
 public enum InstallationRebootBehaviorEnum
 {
     NeverReboots = 0,

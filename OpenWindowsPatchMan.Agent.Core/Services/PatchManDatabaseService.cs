@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using OpenWindowsPatchMan.Agent.Core.Database;
 using OpenWindowsPatchMan.Agent.Core.Models;
 
 
-namespace OpenWindowsPatchMan.Agent.Service;
+namespace OpenWindowsPatchMan.Agent.Core.Services;
 
 public class PatchManDatabaseService : IPatchManDatabaseService
 {

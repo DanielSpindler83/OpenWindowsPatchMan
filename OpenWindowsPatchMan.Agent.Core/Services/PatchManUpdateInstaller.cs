@@ -2,7 +2,7 @@
 using OpenWindowsPatchMan.Agent.Core.Models;
 using WUApiLib;
 
-namespace OpenWindowsPatchMan.Agent.Service;
+namespace OpenWindowsPatchMan.Agent.Core.Services;
 
 public class PatchManUpdateInstaller : IPatchManUpdateInstaller
 {
