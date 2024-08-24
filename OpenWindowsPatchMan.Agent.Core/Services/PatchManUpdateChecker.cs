@@ -33,11 +33,13 @@ public class PatchManUpdateChecker : IPatchManUpdateChecker
 
                 WindowsUpdateInfo updateInfo = new WindowsUpdateInfo
                 {
+                    UpdateId = update.Identity.UpdateID,
                     UpdateCheckTime = updateCheckTime,
                     Title = update.Title,
                     Description = update.Description,
                     DownloadSizeMB = downloadSizeMB,
                     DatePublished = update.LastDeploymentChangeTime,
+                    RevisionNumber = update.Identity.RevisionNumber,
                     DeploymentAction = ((DeploymentActionEnum)update.DeploymentAction).ToString(),
                     IsBeta = update.IsBeta,
                     IsDownloaded = update.IsDownloaded,

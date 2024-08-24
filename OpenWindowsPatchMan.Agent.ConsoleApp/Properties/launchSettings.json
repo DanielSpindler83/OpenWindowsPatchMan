@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "OpenWindowsPatchMan.Agent.ConsoleApp": {
+      "commandName": "Project",
+      "commandLineArgs": "fetch-updates"
+    }
+  }
+}

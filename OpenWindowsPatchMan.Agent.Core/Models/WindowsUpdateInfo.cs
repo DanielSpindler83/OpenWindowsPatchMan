@@ -3,6 +3,7 @@
 public class WindowsUpdateInfo
 {
     public int WindowsUpdateInfoEntryId { get; set; }
+    public string UpdateId { get; set; } = string.Empty;
     public DateTimeOffset UpdateCheckTime { get; set; } = DateTimeOffset.Now;
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
@@ -10,6 +11,7 @@ public class WindowsUpdateInfo
     public List<string> Categories { get; set; }
     public double DownloadSizeMB { get; set; }
     public List<string>? MoreInfoUrls { get; set; }
+    public int RevisionNumber { get; set; }
     public DateTime DatePublished { get; set; }
     public string? DeploymentAction { get; set; } = string.Empty;
     public bool IsBeta { get; set; } = false;

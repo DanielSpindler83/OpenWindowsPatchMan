@@ -8,6 +8,6 @@ public class PatchManUpdateFilter : IPatchManUpdateFilter
     public List<WindowsUpdateInfo> FilterUpdates(List<WindowsUpdateInfo> updates)
     {
         // Example filtering logic
-        return updates;
+        return updates.Take(1).ToList(); // for testing purposes, only return the first update
     }
 }

@@ -1,10 +1,68 @@
-﻿namespace OpenWindowsPatchMan.Agent.ConsoleApp
+﻿
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using OpenWindowsPatchMan.Agent.Core;
+using OpenWindowsPatchMan.Agent.Core.Database;
+using OpenWindowsPatchMan.Agent.Core.Models;
+using OpenWindowsPatchMan.Agent.Core.Services;
+
+
+namespace OpenWindowsPatchMan.Agent.ConsoleApp
 {
-    internal class Program
+    class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            // Load the configuration
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            // Set up the DI container
+            var serviceProvider = new ServiceCollection()
+                .AddLogging()
+                .AddSingleton<IPatchManUpdateChecker, PatchManUpdateChecker>()
+                .AddSingleton<IPatchManUpdateInstaller, PatchManUpdateInstaller>()
+                .AddSingleton<IPatchManDatabaseService, PatchManDatabaseService>()
+                .AddDbContextFactory<UpdateContext>(options =>
+                {
+                    options.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
+                })
+                .BuildServiceProvider();
+
+            // Resolve the services
+            var fetchUpdatesService = serviceProvider.GetService<IPatchManUpdateChecker>();
+            var installUpdatesService = serviceProvider.GetService<IPatchManUpdateInstaller>();
+            var databaseService = serviceProvider.GetService<IPatchManDatabaseService>();
+
+
+            databaseService.InitializeDatabase(); // Ensure the database and table are created
+
+            // Process command line arguments
+            if (args.Length > 0)
+            {
+                switch (args[0].ToLower())
+                {
+                    case "fetch-updates":
+                        List<WindowsUpdateInfo> updatesInfo = fetchUpdatesService.CheckForUpdates();
+                        databaseService.SaveUpdateInfo(updatesInfo);
+                        break;
+                    case "install-updates":
+                        List<WindowsUpdateInfo> updatesToInstall = fetchUpdatesService.CheckForUpdates();
+                        databaseService.SaveUpdateInfo(updatesToInstall);
+                        var testing = updatesToInstall.Take(1).ToList(); // for testing purposes, only install the first update
+                        installUpdatesService?.InstallUpdates(testing);
+                        break;
+                    default:
+                        Console.WriteLine("Unknown command.");
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("No command provided.");
+            }
         }
     }
 }
