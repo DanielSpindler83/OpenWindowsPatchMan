@@ -18,12 +18,20 @@ public class PatchManUpdateInstaller : IPatchManUpdateInstaller
         UpdateSession updateSession = new UpdateSession();
         IUpdateInstaller updateInstaller = updateSession.CreateUpdateInstaller();
         UpdateCollection updateCollection = new UpdateCollection();
+        IUpdateDownloader updateDownloader = updateSession.CreateUpdateDownloader(); // Create an instance of IUpdateDownloader
+
         foreach (var updateInfo in updates)
         {
-            // We need to fetch the actual IUpdate object here based on the updateInfo
             IUpdate update = FetchUpdate(updateInfo);
-            updateCollection.Add(update);
+            if (update != null)
+            {
+                updateCollection.Add(update);
+            }
         }
+
+        // Download the updates synchonously
+        updateDownloader.Updates = updateCollection;
+        updateDownloader.Download();
 
         updateInstaller.Updates = updateCollection;
 
@@ -31,6 +39,7 @@ public class PatchManUpdateInstaller : IPatchManUpdateInstaller
         IInstallationResult installationResult = updateInstaller.Install();
 
         _logger.LogInformation($"Installation result: {installationResult.ResultCode}");
+        _logger.LogInformation($"Installation result: {installationResult.GetUpdateResult}");
         _logger.LogInformation($"Reboot required: {installationResult.RebootRequired}");
     }
 

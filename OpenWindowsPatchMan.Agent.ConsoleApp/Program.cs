@@ -51,8 +51,13 @@ namespace OpenWindowsPatchMan.Agent.ConsoleApp
                     case "install-updates":
                         List<WindowsUpdateInfo> updatesToInstall = fetchUpdatesService.CheckForUpdates();
                         databaseService.SaveUpdateInfo(updatesToInstall);
-                        var testing = updatesToInstall.Take(1).ToList(); // for testing purposes, only install the first update
-                        installUpdatesService?.InstallUpdates(testing);
+                        var testing = updatesToInstall.FirstOrDefault(update => !update.IsInstalled);
+                        List<WindowsUpdateInfo> testingList = new List<WindowsUpdateInfo>();
+                        if (testing != null)
+                        {
+                            testingList.Add(testing);
+                        }
+                        installUpdatesService?.InstallUpdates(testingList);
                         break;
                     default:
                         Console.WriteLine("Unknown command.");

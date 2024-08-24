@@ -1,6 +1,14 @@
 {
   "profiles": {
-    "OpenWindowsPatchMan.Agent.ConsoleApp": {
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    },
+    "install-updates": {
+      "commandName": "Project",
+      "commandLineArgs": "install-updates"
+    },
+    "fetch-updates": {
       "commandName": "Project",
       "commandLineArgs": "fetch-updates"
     }
