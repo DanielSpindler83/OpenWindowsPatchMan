@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenWindowsPatchMan.Agent.Core;
 using OpenWindowsPatchMan.Agent.Core.Database;
+using OpenWindowsPatchMan.Agent.Core.Interfaces;
 using OpenWindowsPatchMan.Agent.Core.Models;
 using OpenWindowsPatchMan.Agent.Core.Services;
 
@@ -24,6 +25,7 @@ namespace OpenWindowsPatchMan.Agent.ConsoleApp
                 .AddLogging()
                 .AddSingleton<IPatchManUpdateChecker, PatchManUpdateChecker>()
                 .AddSingleton<IPatchManUpdateInstaller, PatchManUpdateInstaller>()
+                .AddSingleton<IPatchManConfigureWindowsUpdate, PatchManConfigureWindowsUpdate>()
                 .AddSingleton<IPatchManDatabaseService, PatchManDatabaseService>()
                 .AddDbContextFactory<UpdateContext>(options =>
                 {
@@ -34,6 +36,7 @@ namespace OpenWindowsPatchMan.Agent.ConsoleApp
             // Resolve the services
             var fetchUpdatesService = serviceProvider.GetService<IPatchManUpdateChecker>();
             var installUpdatesService = serviceProvider.GetService<IPatchManUpdateInstaller>();
+            var configureWindowsUpdateService = serviceProvider.GetService<IPatchManConfigureWindowsUpdate>();
             var databaseService = serviceProvider.GetService<IPatchManDatabaseService>();
 
 
@@ -58,6 +61,9 @@ namespace OpenWindowsPatchMan.Agent.ConsoleApp
                             testingList.Add(testing);
                         }
                         installUpdatesService?.InstallUpdates(testingList);
+                        break;
+                    case "configure-windows-update":
+                        configureWindowsUpdateService.LockWindowsUpdateGUI();
                         break;
                     default:
                         Console.WriteLine("Unknown command.");

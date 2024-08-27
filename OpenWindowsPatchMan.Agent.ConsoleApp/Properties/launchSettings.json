@@ -11,6 +11,10 @@
     "fetch-updates": {
       "commandName": "Project",
       "commandLineArgs": "fetch-updates"
+    },
+    "configure-windows-update": {
+      "commandName": "Project",
+      "commandLineArgs": "configure-windows-update"
     }
   }
 }
