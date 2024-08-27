@@ -39,7 +39,7 @@ public class PatchManUpdateInstaller : IPatchManUpdateInstaller
         IInstallationResult installationResult = updateInstaller.Install();
 
         _logger.LogInformation($"Installation result: {installationResult.ResultCode}");
-        _logger.LogInformation($"Installation result: {installationResult.GetUpdateResult}");
+        _logger.LogInformation($"Installation result: {installationResult.HResult}");
         _logger.LogInformation($"Reboot required: {installationResult.RebootRequired}");
     }
 
