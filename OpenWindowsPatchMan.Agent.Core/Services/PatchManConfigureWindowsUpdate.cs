@@ -37,7 +37,7 @@ public class PatchManConfigureWindowsUpdate : IPatchManConfigureWindowsUpdate
             using (RegistryKey key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64)
                 .CreateSubKey(disableWindowsUpdateAccessSubKey))
             {
-                key.SetValue("SetDisableUXWUAccess ", 1, RegistryValueKind.DWord); // Disable access to Windows Update features
+                key.SetValue("SetDisableUXWUAccess", 1, RegistryValueKind.DWord); // Disable access to Windows Update features
             }
 
             Console.WriteLine("Windows Update GUI settings have been successfully locked.");
