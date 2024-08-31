@@ -10,7 +10,7 @@ using OpenWindowsPatchMan.Agent.Core.Database;
 
 namespace OpenWindowsPatchMan.Agent.Service.Migrations
 {
-    [DbContext(typeof(UpdateContext))]
+    [DbContext(typeof(PatchManDbContext))]
     [Migration("20240824104344_add-updateid_and_revision_number")]
     partial class addupdateid_and_revision_number
     {

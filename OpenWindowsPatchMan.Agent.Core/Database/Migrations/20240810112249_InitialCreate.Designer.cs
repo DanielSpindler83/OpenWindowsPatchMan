@@ -10,7 +10,7 @@ using OpenWindowsPatchMan.Agent.Core.Database;
 
 namespace OpenWindowsPatchMan.Agent.Service.Migrations
 {
-    [DbContext(typeof(UpdateContext))]
+    [DbContext(typeof(PatchManDbContext))]
     [Migration("20240810112249_InitialCreate")]
     partial class InitialCreate
     {

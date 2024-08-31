@@ -9,9 +9,9 @@ namespace OpenWindowsPatchMan.Agent.Core.Services;
 public class PatchManDatabaseService : IPatchManDatabaseService
 {
     private readonly ILogger<PatchManDatabaseService> _logger;
-    private readonly IDbContextFactory<UpdateContext> _contextFactory;
+    private readonly IDbContextFactory<PatchManDbContext> _contextFactory;
 
-    public PatchManDatabaseService(ILogger<PatchManDatabaseService> logger, IDbContextFactory<UpdateContext> contextFactory)
+    public PatchManDatabaseService(ILogger<PatchManDatabaseService> logger, IDbContextFactory<PatchManDbContext> contextFactory)
     {
         _logger = logger;
         _contextFactory = contextFactory;

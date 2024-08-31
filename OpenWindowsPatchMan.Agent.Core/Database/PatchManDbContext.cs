@@ -3,9 +3,9 @@ using OpenWindowsPatchMan.Agent.Core.Models;
 
 namespace OpenWindowsPatchMan.Agent.Core.Database;
 
-public class UpdateContext : DbContext
+public class PatchManDbContext : DbContext
 {
-    public UpdateContext(DbContextOptions<UpdateContext> options)
+    public PatchManDbContext(DbContextOptions<PatchManDbContext> options)
         : base(options)
     {
     }

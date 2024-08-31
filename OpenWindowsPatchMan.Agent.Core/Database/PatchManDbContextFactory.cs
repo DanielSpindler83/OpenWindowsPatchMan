@@ -4,11 +4,11 @@ using Microsoft.Extensions.Configuration;
 //using Microsoft.Extensions.Configuration;
 
 namespace OpenWindowsPatchMan.Agent.Core.Database;
-    public class UpdateContextFactory : IDesignTimeDbContextFactory<UpdateContext>
+    public class PatchManDbContextFactory : IDesignTimeDbContextFactory<PatchManDbContext>
     {
-        public UpdateContext CreateDbContext(string[] args)
+        public PatchManDbContext CreateDbContext(string[] args)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<UpdateContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<PatchManDbContext>();
 
         // Provide the connection string or configuration here
         var configuration = new ConfigurationBuilder()
@@ -18,6 +18,6 @@ namespace OpenWindowsPatchMan.Agent.Core.Database;
         var connectionString = configuration.GetConnectionString("DefaultConnection");
             optionsBuilder.UseSqlite(connectionString);
 
-            return new UpdateContext(optionsBuilder.Options);
+            return new PatchManDbContext(optionsBuilder.Options);
         }
     }

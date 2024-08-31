@@ -12,6 +12,9 @@ public class PatchManConfigureWindowsUpdate : IPatchManConfigureWindowsUpdate
     /// <summary>
     /// Locks the Windows Update GUI and disables certain update settings.
     /// </summary>
+    /// 
+
+    ///////////////// We need to ensure this runs as admin or it doesnt work....
     public void LockWindowsUpdateGUI()
     {
         try
@@ -42,7 +45,7 @@ public class PatchManConfigureWindowsUpdate : IPatchManConfigureWindowsUpdate
 
             Console.WriteLine("Windows Update GUI settings have been successfully locked.");
 
-            // Restart Windows Update service to apply changes
+            // Restart Windows Update service to apply changes - i dont think this is needed but maybe cant hurt?
             RestartWindowsUpdateService();
         }
         catch (Exception ex)

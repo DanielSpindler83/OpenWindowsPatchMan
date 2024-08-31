@@ -9,7 +9,7 @@ using OpenWindowsPatchMan.Agent.Core.Database;
 
 namespace OpenWindowsPatchMan.Agent.Service.Migrations
 {
-    [DbContext(typeof(UpdateContext))]
+    [DbContext(typeof(PatchManDbContext))]
     partial class UpdateContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

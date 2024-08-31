@@ -22,8 +22,8 @@ public class Program
             {
                 services.AddHostedService<PatchManWorkerService>();
 
-                // Register IDbContextFactory for UpdateContext
-                services.AddDbContextFactory<UpdateContext>(options =>
+                // Register IDbContextFactory for PatchManDbContext
+                services.AddDbContextFactory<PatchManDbContext>(options =>
                     options.UseSqlite(hostContext.Configuration.GetConnectionString("DefaultConnection")));
 
                 // Register services

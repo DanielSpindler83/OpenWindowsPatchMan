@@ -27,7 +27,7 @@ namespace OpenWindowsPatchMan.Agent.ConsoleApp
                 .AddSingleton<IPatchManUpdateInstaller, PatchManUpdateInstaller>()
                 .AddSingleton<IPatchManConfigureWindowsUpdate, PatchManConfigureWindowsUpdate>()
                 .AddSingleton<IPatchManDatabaseService, PatchManDatabaseService>()
-                .AddDbContextFactory<UpdateContext>(options =>
+                .AddDbContextFactory<PatchManDbContext>(options =>
                 {
                     options.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
                 })

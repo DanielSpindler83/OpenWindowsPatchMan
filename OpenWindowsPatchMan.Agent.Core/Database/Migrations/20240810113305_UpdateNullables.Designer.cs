@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace OpenWindowsPatchMan.Agent.Service.Migrations
 {
-    [DbContext(typeof(UpdateContext))]
+    [DbContext(typeof(PatchManDbContext))]
     [Migration("20240810113305_UpdateNullables")]
     partial class UpdateNullables
     {
