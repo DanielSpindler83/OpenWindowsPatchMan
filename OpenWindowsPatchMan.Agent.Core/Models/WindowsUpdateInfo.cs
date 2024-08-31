@@ -2,9 +2,9 @@
 
 public class WindowsUpdateInfo
 {
-    public int WindowsUpdateInfoEntryId { get; set; }
     public string UpdateId { get; set; } = string.Empty;
     public DateTimeOffset UpdateCheckTime { get; set; } = DateTimeOffset.Now;
+    public DateTimeOffset FirstSeenTime { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public List<string>? KBArticleIDs { get; set; }

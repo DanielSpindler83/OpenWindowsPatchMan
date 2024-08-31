@@ -16,7 +16,7 @@ public class PatchManDbContext : DbContext
     {
         // Define the primary key explicitly
         modelBuilder.Entity<WindowsUpdateInfo>()
-            .HasKey(e => e.WindowsUpdateInfoEntryId); // Make sure 'Id' is defined in your model
+            .HasKey(e => e.UpdateId); 
 
         // Convert List<string> to a single string and vice versa
         modelBuilder.Entity<WindowsUpdateInfo>()

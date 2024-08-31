@@ -30,7 +30,24 @@ public class PatchManDatabaseService : IPatchManDatabaseService
     {
         using (var context = _contextFactory.CreateDbContext())
         {
-            context.WindowsUpdateInfos.AddRange(updatesInfo);
+            foreach (var updateInfo in updatesInfo)
+            {
+                var existingUpdate = context.WindowsUpdateInfos
+                    .FirstOrDefault(u => u.UpdateId == updateInfo.UpdateId);
+
+                if (existingUpdate == null)
+                {
+                    updateInfo.FirstSeenTime = updateInfo.UpdateCheckTime;
+                    context.WindowsUpdateInfos.Add(updateInfo);
+                }
+                else
+                {
+                    var originalFirstSeenTime = existingUpdate.FirstSeenTime;
+                    context.Entry(existingUpdate).CurrentValues.SetValues(updateInfo);
+                    existingUpdate.FirstSeenTime = originalFirstSeenTime;
+                }
+            }
+
             context.SaveChanges();
             _logger.LogInformation("Update check results saved to database.");
         }
