@@ -52,6 +52,7 @@ namespace OpenWindowsPatchMan.Agent.ConsoleApp
                         databaseService.SaveUpdateInfo(updatesInfo);
                         break;
                     case "install-updates":
+                        // retrieve list of updates available for installation - maybe via call to UpdateChecker?
                         List<WindowsUpdateInfo> updatesToInstall = fetchUpdatesService.CheckForUpdates();
                         databaseService.SaveUpdateInfo(updatesToInstall);
                         var testing = updatesToInstall.FirstOrDefault(update => !update.IsInstalled);

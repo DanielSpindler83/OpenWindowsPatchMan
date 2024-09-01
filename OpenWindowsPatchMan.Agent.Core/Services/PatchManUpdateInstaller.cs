@@ -17,30 +17,25 @@ public class PatchManUpdateInstaller : IPatchManUpdateInstaller
     {
         UpdateSession updateSession = new UpdateSession();
         IUpdateInstaller updateInstaller = updateSession.CreateUpdateInstaller();
-        UpdateCollection updateCollection = new UpdateCollection();
-        IUpdateDownloader updateDownloader = updateSession.CreateUpdateDownloader(); // Create an instance of IUpdateDownloader
+        IUpdateDownloader updateDownloader = updateSession.CreateUpdateDownloader();
 
         foreach (var updateInfo in updates)
         {
             IUpdate update = FetchUpdate(updateInfo);
             if (update != null)
             {
-                updateCollection.Add(update);
+                updateDownloader.Updates = (UpdateCollection)update;
+                updateDownloader.Download();
+
+                updateInstaller.Updates = (UpdateCollection)update;
+                _logger.LogInformation($"Starting installation for update: {update.Title}");
+                IInstallationResult installationResult = updateInstaller.Install();
+
+                _logger.LogInformation($"Installation result for update {update.Title}: {installationResult.ResultCode}");
+                _logger.LogInformation($"Installation result for update {update.Title}: {installationResult.HResult}");
+                _logger.LogInformation($"Reboot required for update {update.Title}: {installationResult.RebootRequired}");
             }
         }
-
-        // Download the updates synchonously
-        updateDownloader.Updates = updateCollection;
-        updateDownloader.Download();
-
-        updateInstaller.Updates = updateCollection;
-
-        _logger.LogInformation("Starting installation...");
-        IInstallationResult installationResult = updateInstaller.Install();
-
-        _logger.LogInformation($"Installation result: {installationResult.ResultCode}");
-        _logger.LogInformation($"Installation result: {installationResult.HResult}");
-        _logger.LogInformation($"Reboot required: {installationResult.RebootRequired}");
     }
 
     private IUpdate FetchUpdate(WindowsUpdateInfo updateInfo)

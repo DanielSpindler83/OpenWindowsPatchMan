@@ -30,8 +30,9 @@ public class WindowsUpdateInfo
     public string Type { get; set; } = string.Empty;
     public string? SupportUrl { get; set; } = string.Empty;
     public List<string>? BundledUpdates { get; set; }
-    // public string InstallationResultCode { get; set; } = string.Empty; // unsure if needed and not implemented yet - maybe should be on an updateInstallResult class?
-    // public bool RebootRequired { get; set; } // unsure if needed and not implemented yet - maybe should be on an updateInstallResult class?
+
+    // Navigation property
+    public ICollection<UpdateInstallation> UpdateInstallations { get; set; }
 
     public WindowsUpdateInfo()
     {

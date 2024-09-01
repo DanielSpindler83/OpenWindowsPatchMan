@@ -11,10 +11,10 @@ public class PatchManDbContext : DbContext
     }
 
     public DbSet<WindowsUpdateInfo> WindowsUpdateInfos { get; set; }
+    public DbSet<UpdateInstallation> UpdateInstallations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Define the primary key explicitly
         modelBuilder.Entity<WindowsUpdateInfo>()
             .HasKey(e => e.UpdateId); 
 
@@ -55,7 +55,14 @@ public class PatchManDbContext : DbContext
                 v => string.Join(',', v),
                 v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList());
 
-        // Map to the "WindowsUpdateInfo" table
         modelBuilder.Entity<WindowsUpdateInfo>().ToTable("WindowsUpdateInfo");
+
+
+        modelBuilder.Entity<UpdateInstallation>()
+            .HasOne(ui => ui.WindowsUpdateInfo)
+            .WithMany(wu => wu.UpdateInstallations)
+            .HasForeignKey(ui => ui.UpdateId);
+
+        modelBuilder.Entity<UpdateInstallation>().ToTable("UpdateInstallation");
     }
 }
