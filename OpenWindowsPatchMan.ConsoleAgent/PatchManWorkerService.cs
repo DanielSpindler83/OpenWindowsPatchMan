@@ -9,9 +9,7 @@ namespace OpenWindowsPatchMan.Agent.Service;
 public class PatchManWorkerService : BackgroundService
 {
     private readonly ILogger<PatchManWorkerService> _logger;
-    private readonly IPatchManUpdateChecker _updateChecker;
-    private readonly IPatchManUpdateFilter _updateFilter;
-    private readonly IPatchManUpdateInstaller _updateInstaller;
+    private readonly IPatchManUpdateService _updateService;
     private readonly IPatchManDatabaseService _databaseService;
     private readonly IConfiguration _configuration;
     private readonly TimeSpan _checkInterval;
@@ -19,16 +17,12 @@ public class PatchManWorkerService : BackgroundService
     public PatchManWorkerService(
         ILogger<PatchManWorkerService> logger,
         IConfiguration configuration,
-        IPatchManUpdateChecker updateChecker,
-        IPatchManUpdateFilter updateFilter,
-        IPatchManUpdateInstaller updateInstaller,
+        IPatchManUpdateService updateService,
         IPatchManDatabaseService databaseService)
     {
         _logger = logger;
         _configuration = configuration;
-        _updateChecker = updateChecker;
-        _updateFilter = updateFilter;
-        _updateInstaller = updateInstaller;
+        _updateService = updateService;
         _databaseService = databaseService;
         _checkInterval = TimeSpan.FromMinutes(_configuration.GetValue<int>("CheckIntervalMinutes", 60));
     }
@@ -42,16 +36,16 @@ public class PatchManWorkerService : BackgroundService
             _logger.LogInformation("PatchManWorkerService running at: {time}", DateTimeOffset.Now);
 
             // Check for updates
-            List<WindowsUpdateInfo> updatesInfo = _updateChecker.CheckForUpdates();
+            List<WindowsUpdateInfo> updatesInfo = _updateService.CheckForUpdates();
 
             // Filter updates based on criteria
-            List<WindowsUpdateInfo> filteredUpdatesInfo = _updateFilter.FilterUpdates(updatesInfo);
+            List<WindowsUpdateInfo> filteredUpdatesInfo = _updateService.FilterUpdates(updatesInfo);
 
             // Save update info to database
             _databaseService.SaveUpdateInfo(filteredUpdatesInfo);
 
             // Install updates
-            //_updateInstaller.InstallUpdates(filteredUpdatesInfo);
+            //_updateService.InstallUpdates(filteredUpdatesInfo);
 
             await Task.Delay(_checkInterval, stoppingToken);
         }

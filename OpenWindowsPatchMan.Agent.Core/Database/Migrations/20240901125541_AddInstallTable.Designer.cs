@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OpenWindowsPatchMan.Agent.Core.Database;
 
@@ -10,9 +11,11 @@ using OpenWindowsPatchMan.Agent.Core.Database;
 namespace OpenWindowsPatchMan.Agent.Service.Migrations
 {
     [DbContext(typeof(PatchManDbContext))]
-    partial class UpdateContextModelSnapshot : ModelSnapshot
+    [Migration("20240901125541_AddInstallTable")]
+    partial class AddInstallTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");

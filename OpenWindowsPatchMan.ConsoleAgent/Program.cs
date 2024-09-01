@@ -27,9 +27,7 @@ public class Program
                     options.UseSqlite(hostContext.Configuration.GetConnectionString("DefaultConnection")));
 
                 // Register services
-                services.AddSingleton<IPatchManUpdateChecker, PatchManUpdateChecker>();
-                services.AddSingleton<IPatchManUpdateFilter, PatchManUpdateFilter>();
-                services.AddSingleton<IPatchManUpdateInstaller, PatchManUpdateInstaller>();
+                services.AddSingleton<IPatchManUpdateService, PatchManUpdateService>();
                 services.AddSingleton<IPatchManDatabaseService, PatchManDatabaseService>();
             });
 }

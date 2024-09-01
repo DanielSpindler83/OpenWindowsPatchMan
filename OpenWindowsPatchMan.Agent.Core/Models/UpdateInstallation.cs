@@ -2,7 +2,7 @@
 
 public class UpdateInstallation
 {
-    public int InstallationId { get; set; }
+    public int UpdateInstallationId { get; set; }
     public string UpdateId { get; set; }
     public string InstallationStatus { get; set; }
     public DateTime InstallationTime { get; set; }

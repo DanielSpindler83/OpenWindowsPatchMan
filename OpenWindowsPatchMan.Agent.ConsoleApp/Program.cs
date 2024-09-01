@@ -23,8 +23,7 @@ namespace OpenWindowsPatchMan.Agent.ConsoleApp
             // Set up the DI container
             var serviceProvider = new ServiceCollection()
                 .AddLogging()
-                .AddSingleton<IPatchManUpdateChecker, PatchManUpdateChecker>()
-                .AddSingleton<IPatchManUpdateInstaller, PatchManUpdateInstaller>()
+                .AddSingleton<IPatchManUpdateService, PatchManUpdateService>()
                 .AddSingleton<IPatchManConfigureWindowsUpdate, PatchManConfigureWindowsUpdate>()
                 .AddSingleton<IPatchManDatabaseService, PatchManDatabaseService>()
                 .AddDbContextFactory<PatchManDbContext>(options =>
@@ -34,8 +33,7 @@ namespace OpenWindowsPatchMan.Agent.ConsoleApp
                 .BuildServiceProvider();
 
             // Resolve the services
-            var fetchUpdatesService = serviceProvider.GetService<IPatchManUpdateChecker>();
-            var installUpdatesService = serviceProvider.GetService<IPatchManUpdateInstaller>();
+            var updatesService = serviceProvider.GetService<IPatchManUpdateService>();
             var configureWindowsUpdateService = serviceProvider.GetService<IPatchManConfigureWindowsUpdate>();
             var databaseService = serviceProvider.GetService<IPatchManDatabaseService>();
 
@@ -48,12 +46,12 @@ namespace OpenWindowsPatchMan.Agent.ConsoleApp
                 switch (args[0].ToLower())
                 {
                     case "fetch-updates":
-                        List<WindowsUpdateInfo> updatesInfo = fetchUpdatesService.CheckForUpdates();
+                        List<WindowsUpdateInfo> updatesInfo = updatesService.CheckForUpdates();
                         databaseService.SaveUpdateInfo(updatesInfo);
                         break;
                     case "install-updates":
                         // retrieve list of updates available for installation - maybe via call to UpdateChecker?
-                        List<WindowsUpdateInfo> updatesToInstall = fetchUpdatesService.CheckForUpdates();
+                        List<WindowsUpdateInfo> updatesToInstall = updatesService.CheckForUpdates();
                         databaseService.SaveUpdateInfo(updatesToInstall);
                         var testing = updatesToInstall.FirstOrDefault(update => !update.IsInstalled);
                         List<WindowsUpdateInfo> testingList = new List<WindowsUpdateInfo>();
@@ -61,7 +59,7 @@ namespace OpenWindowsPatchMan.Agent.ConsoleApp
                         {
                             testingList.Add(testing);
                         }
-                        installUpdatesService?.InstallUpdates(testingList);
+                        updatesService?.InstallUpdates(testingList);
                         break;
                     case "configure-windows-update":
                         configureWindowsUpdateService.LockWindowsUpdateGUI();

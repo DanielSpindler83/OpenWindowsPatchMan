@@ -6,11 +6,11 @@ using WUApiLib;
 
 namespace OpenWindowsPatchMan.Agent.Core.Services;
 
-public class PatchManUpdateChecker : IPatchManUpdateChecker
+public class PatchManUpdateService : IPatchManUpdateService
 {
-    private readonly ILogger<PatchManUpdateChecker> _logger;
+    private readonly ILogger<PatchManUpdateService> _logger;
 
-    public PatchManUpdateChecker(ILogger<PatchManUpdateChecker> logger)
+    public PatchManUpdateService(ILogger<PatchManUpdateService> logger)
     {
         _logger = logger;
     }
@@ -105,5 +105,59 @@ public class PatchManUpdateChecker : IPatchManUpdateChecker
         }
 
         return updatesInfo;
+    }
+
+    public List<WindowsUpdateInfo> FilterUpdates(List<WindowsUpdateInfo> updates)
+    {
+        // Example filtering logic
+        return updates.Take(1).ToList(); // for testing purposes, only return the first update
+    }
+
+    public void InstallUpdates(List<WindowsUpdateInfo> updates)
+    {
+        UpdateSession updateSession = new UpdateSession();
+        IUpdateInstaller updateInstaller = updateSession.CreateUpdateInstaller();
+        IUpdateDownloader updateDownloader = updateSession.CreateUpdateDownloader();
+
+        foreach (var updateInfo in updates)
+        {
+            IUpdate update = FetchUpdate(updateInfo);
+            if (update != null)
+            {
+                updateDownloader.Updates = (UpdateCollection)update;
+                updateDownloader.Download();
+
+                updateInstaller.Updates = (UpdateCollection)update;
+                _logger.LogInformation($"Starting installation for update: {update.Title}");
+                IInstallationResult installationResult = updateInstaller.Install();
+
+                _logger.LogInformation($"Installation result for update {update.Title}: {installationResult.ResultCode}");
+                _logger.LogInformation($"Installation result for update {update.Title}: {installationResult.HResult}");
+                _logger.LogInformation($"Reboot required for update {update.Title}: {installationResult.RebootRequired}");
+            }
+        }
+    }
+
+    private IUpdate FetchUpdate(WindowsUpdateInfo updateInfo)
+    {
+        UpdateSession updateSession = new UpdateSession();
+        IUpdateSearcher updateSearcher = updateSession.CreateUpdateSearcher();
+
+        // Create a search criteria based on the updateInfo
+        ISearchResult searchResult = updateSearcher.Search($"IsInstalled=0 and UpdateID='{updateInfo.UpdateId}'");
+
+        // Check if any updates match the search criteria
+        if (searchResult.Updates.Count == 1)
+        {
+            // Return the first matching update
+            return searchResult.Updates[0];
+        }
+        else
+        {
+            // Handle the case when no or multiple updates match the search criteria
+            // You can throw an exception, log an error, or handle it based on your application's requirements
+            // For now, let's return null
+            return null;
+        }
     }
 }
