@@ -7,4 +7,5 @@ public interface IPatchManUpdateService
     List<WindowsUpdateInfo> CheckForUpdates();
     List<WindowsUpdateInfo> FilterUpdates(List<WindowsUpdateInfo> updates);
     void InstallUpdates(List<WindowsUpdateInfo> updates);
+    public void RetrieveUpdateHistory();
 }

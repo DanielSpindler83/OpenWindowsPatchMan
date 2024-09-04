@@ -15,6 +15,10 @@
     "configure-windows-update": {
       "commandName": "Project",
       "commandLineArgs": "configure-windows-update"
+    },
+    "retrieve-update-history": {
+      "commandName": "Project",
+      "commandLineArgs": "retrieve-update-history"
     }
   }
 }

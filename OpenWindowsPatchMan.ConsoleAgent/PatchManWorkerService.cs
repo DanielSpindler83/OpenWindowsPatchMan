@@ -41,9 +41,6 @@ public class PatchManWorkerService : BackgroundService
             // Filter updates based on criteria
             List<WindowsUpdateInfo> filteredUpdatesInfo = _updateService.FilterUpdates(updatesInfo);
 
-            // Save update info to database
-            _databaseService.SaveUpdateInfo(filteredUpdatesInfo);
-
             // Install updates
             //_updateService.InstallUpdates(filteredUpdatesInfo);
 

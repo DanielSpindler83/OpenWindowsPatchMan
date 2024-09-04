@@ -9,10 +9,12 @@ namespace OpenWindowsPatchMan.Agent.Core.Services;
 public class PatchManUpdateService : IPatchManUpdateService
 {
     private readonly ILogger<PatchManUpdateService> _logger;
+    private readonly IPatchManDatabaseService _databaseService;
 
-    public PatchManUpdateService(ILogger<PatchManUpdateService> logger)
+    public PatchManUpdateService(ILogger<PatchManUpdateService> logger, IPatchManDatabaseService databaseService)
     {
         _logger = logger;
+        _databaseService = databaseService;
     }
 
     public List<WindowsUpdateInfo> CheckForUpdates()
@@ -104,6 +106,8 @@ public class PatchManUpdateService : IPatchManUpdateService
             _logger.LogError(ex, "An error occurred while checking for updates");
         }
 
+        _databaseService.SaveUpdateInfo(updatesInfo);
+
         return updatesInfo;
     }
 
@@ -159,5 +163,18 @@ public class PatchManUpdateService : IPatchManUpdateService
             // For now, let's return null
             return null;
         }
+    }
+
+    public void RetrieveUpdateHistory()
+    {
+        // https://stackoverflow.com/questions/815340/how-do-i-get-a-list-of-installed-updates-and-hotfixes
+
+        var updateSession = new UpdateSession();
+        var updateSearcher = updateSession.CreateUpdateSearcher();
+        var count = updateSearcher.GetTotalHistoryCount();
+        var history = updateSearcher.QueryHistory(0, count);
+
+        for (int i = 0; i < count; ++i)
+            Console.WriteLine(history[i].Title);
     }
 }

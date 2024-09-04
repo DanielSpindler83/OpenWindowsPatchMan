@@ -46,11 +46,9 @@ namespace OpenWindowsPatchMan.Agent.ConsoleApp
                 switch (args[0].ToLower())
                 {
                     case "fetch-updates":
-                        List<WindowsUpdateInfo> updatesInfo = updatesService.CheckForUpdates();
-                        databaseService.SaveUpdateInfo(updatesInfo);
+                        updatesService.CheckForUpdates();
                         break;
                     case "install-updates":
-                        // retrieve list of updates available for installation - maybe via call to UpdateChecker?
                         List<WindowsUpdateInfo> updatesToInstall = updatesService.CheckForUpdates();
                         databaseService.SaveUpdateInfo(updatesToInstall);
                         var testing = updatesToInstall.FirstOrDefault(update => !update.IsInstalled);
@@ -63,6 +61,9 @@ namespace OpenWindowsPatchMan.Agent.ConsoleApp
                         break;
                     case "configure-windows-update":
                         configureWindowsUpdateService.LockWindowsUpdateGUI();
+                        break;
+                    case "retrieve-update-history":
+                        updatesService?.RetrieveUpdateHistory();
                         break;
                     default:
                         Console.WriteLine("Unknown command.");
