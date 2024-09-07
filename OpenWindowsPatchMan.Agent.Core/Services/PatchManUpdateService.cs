@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Logging;
 using OpenWindowsPatchMan.Agent.Core;
 using OpenWindowsPatchMan.Agent.Core.Models;
 using OpenWindowsPatchMan.Agent.Core.Models.Enums;
@@ -143,6 +144,9 @@ public class PatchManUpdateService : IPatchManUpdateService
                 _logger.LogInformation($"Installation result for update {update.Title}: {installationResult.ResultCode}");
                 _logger.LogInformation($"Installation result for update {update.Title}: {installationResult.HResult}");
                 _logger.LogInformation($"Reboot required for update {update.Title}: {installationResult.RebootRequired}");
+
+                // TODO - save the install results into the DB Updateinstalltion table
+                // TODO build a proper to string for logging
             }
         }
     }
