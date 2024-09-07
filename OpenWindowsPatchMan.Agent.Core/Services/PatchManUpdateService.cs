@@ -128,10 +128,15 @@ public class PatchManUpdateService : IPatchManUpdateService
             IUpdate update = FetchUpdate(updateInfo);
             if (update != null)
             {
-                updateDownloader.Updates = (UpdateCollection)update;
+                // Create an UpdateCollection and add the single update to it
+                UpdateCollection updateCollection = new UpdateCollection();
+                updateCollection.Add(update);
+
+                // Assign the UpdateCollection to the downloader and installer
+                updateDownloader.Updates = updateCollection;
                 updateDownloader.Download();
 
-                updateInstaller.Updates = (UpdateCollection)update;
+                updateInstaller.Updates = updateCollection;
                 _logger.LogInformation($"Starting installation for update: {update.Title}");
                 IInstallationResult installationResult = updateInstaller.Install();
 
@@ -175,6 +180,11 @@ public class PatchManUpdateService : IPatchManUpdateService
         var history = updateSearcher.QueryHistory(0, count);
 
         for (int i = 0; i < count; ++i)
+        {
+            Console.WriteLine("--------------------");
             Console.WriteLine(history[i].Title);
+            Console.WriteLine(history[i].Date);
+            Console.WriteLine(history[i].UpdateIdentity.UpdateID);
+        }
     }
 }

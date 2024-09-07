@@ -51,7 +51,7 @@ namespace OpenWindowsPatchMan.Agent.ConsoleApp
                     case "install-updates":
                         List<WindowsUpdateInfo> updatesToInstall = updatesService.CheckForUpdates();
                         databaseService.SaveUpdateInfo(updatesToInstall);
-                        var testing = updatesToInstall.FirstOrDefault(update => !update.IsInstalled);
+                        var testing = updatesToInstall.FirstOrDefault(update => !update.IsInstalled && update.DeploymentAction != "OptionalInstallation");
                         List<WindowsUpdateInfo> testingList = new List<WindowsUpdateInfo>();
                         if (testing != null)
                         {

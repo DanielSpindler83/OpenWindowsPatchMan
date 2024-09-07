@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.ServiceProcess;
 using Microsoft.Win32;
 using OpenWindowsPatchMan.Agent.Core.Interfaces;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace OpenWindowsPatchMan.Agent.Core.Services;
 
@@ -23,18 +24,30 @@ public class PatchManConfigureWindowsUpdate : IPatchManConfigureWindowsUpdate
             string rootKey = "HKLM";
             string windowsUpdateSubKey = @"SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU";
             string disableWindowsUpdateAccessSubKey = @"SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate";
+            string disableDefenderSignatureUpdatesSubKey = @"SOFTWARE\Policies\Microsoft\Windows Defender\Signature Updates";
 
             // Backup registry keys before modification
             BackupRegistryKey(rootKey, windowsUpdateSubKey);
             BackupRegistryKey(rootKey, disableWindowsUpdateAccessSubKey);
+            BackupRegistryKey(rootKey, disableDefenderSignatureUpdatesSubKey);
 
             // Modify Windows Update settings
             using (RegistryKey key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64)
                 .CreateSubKey(windowsUpdateSubKey))
             {
                 key.SetValue("NoAutoUpdate", 1, RegistryValueKind.DWord); // Disable automatic updates
-                key.SetValue("NoAUOptions", 1, RegistryValueKind.DWord);  // Disable access to update settings
+
+                key.SetValue("AUOptions", 2, RegistryValueKind.DWord);  // Disable access to update settings
+                    //2 = Notify before downloading and installing any updates.
+                    //When Windows finds updates that apply to this computer, users will be notified that updates are ready to be downloaded.After going to Windows Update, users can download and install any available updates.
             }
+
+            // // Disable windows defender automatic updates on fetch updates by setting the SignatureUpdateInterval to 0 (or any high number)
+            //using (RegistryKey key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64)
+            //    .CreateSubKey(disableDefenderSignatureUpdatesSubKey))
+            //{
+            //    key.SetValue("SignatureUpdateInterval", 0, RegistryValueKind.DWord); // Disable access to Windows Update features
+            //}
 
             // Disable access to Windows Update GUI
             using (RegistryKey key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64)
