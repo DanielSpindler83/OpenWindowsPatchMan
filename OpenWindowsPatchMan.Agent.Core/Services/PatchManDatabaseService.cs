@@ -15,6 +15,7 @@ public class PatchManDatabaseService : IPatchManDatabaseService
     {
         _logger = logger;
         _contextFactory = contextFactory;
+        this.InitializeDatabase(); // Ensure the database and table are created
     }
 
     public void InitializeDatabase()
@@ -71,6 +72,15 @@ public class PatchManDatabaseService : IPatchManDatabaseService
 
             context.SaveChanges();
             _logger.LogInformation("Installation results saved to database.");
+        }
+    }
+
+
+    public IEnumerable<T> GetFilteredEntities<T>(Func<T, bool> filter) where T : class
+    {
+        using (var context = _contextFactory.CreateDbContext())
+        {
+            return context.Set<T>().Where(filter).ToList();
         }
     }
 }

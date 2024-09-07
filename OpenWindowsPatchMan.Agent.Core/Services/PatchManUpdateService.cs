@@ -117,7 +117,7 @@ public class PatchManUpdateService : IPatchManUpdateService
         return updates.Take(1).ToList(); // for testing purposes, only return the first update
     }
 
-    public void InstallUpdates(List<WindowsUpdateInfo> updates)
+    private void InstallUpdates(List<WindowsUpdateInfo> updates)
     {
         UpdateSession updateSession = new UpdateSession();
         IUpdateInstaller updateInstaller = updateSession.CreateUpdateInstaller();
@@ -186,5 +186,25 @@ public class PatchManUpdateService : IPatchManUpdateService
             Console.WriteLine(history[i].Date);
             Console.WriteLine(history[i].UpdateIdentity.UpdateID);
         }
+    }
+
+    public void InstallFilteredUpdates()
+    {
+        try
+        {
+            // Step 1: Retrieve updates from the database using the specific filter
+            // do we also filter superseded updates?
+            var filteredUpdates = _databaseService.GetFilteredEntities<WindowsUpdateInfo>(
+                update => !update.IsInstalled && update.DeploymentAction != "OptionalInstallation"
+            ).ToList();
+
+            // Step 2: Install the filtered updates
+            InstallUpdates(filteredUpdates);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while installing filtered updates");
+        }
+
     }
 }
