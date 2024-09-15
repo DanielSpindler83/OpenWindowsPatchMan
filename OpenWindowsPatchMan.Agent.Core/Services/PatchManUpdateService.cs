@@ -183,13 +183,19 @@ public class PatchManUpdateService : IPatchManUpdateService
         var count = updateSearcher.GetTotalHistoryCount();
         var history = updateSearcher.QueryHistory(0, count);
 
-        for (int i = 0; i < count; ++i)
+        // Convert the history array to a list and sort by install date
+        var sortedHistory = history.Cast<IUpdateHistoryEntry>()
+                                   .OrderBy(h => h.Date)
+                                   .ToList();
+
+        foreach (var entry in sortedHistory)
         {
             Console.WriteLine("--------------------");
-            Console.WriteLine(history[i].Title);
-            Console.WriteLine(history[i].Date);
-            Console.WriteLine(history[i].UpdateIdentity.UpdateID);
+            Console.WriteLine(entry.Title);
+            Console.WriteLine(entry.Date);
+            Console.WriteLine(entry.UpdateIdentity.UpdateID);
         }
+
     }
 
     public void InstallFilteredUpdates()
