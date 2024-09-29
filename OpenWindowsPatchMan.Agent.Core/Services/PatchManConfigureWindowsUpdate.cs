@@ -46,8 +46,21 @@ public class PatchManConfigureWindowsUpdate : IPatchManConfigureWindowsUpdate
             //using (RegistryKey key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64)
             //    .CreateSubKey(disableDefenderSignatureUpdatesSubKey))
             //{
-            //    key.SetValue("SignatureUpdateInterval", 0, RegistryValueKind.DWord); // Disable access to Windows Update features
+            //    key.SetValue("SignatureUpdateInterval", 0, RegistryValueKind.DWord);
             //}
+
+            // // Disable windows defender automatic updates on fetch updates by setting the SignatureUpdateInterval to 0 (or any high number)
+            //using (RegistryKey key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64)
+            //    .CreateSubKey(disableDefenderSignatureUpdatesSubKey))
+            //{
+            //    key.SetValue("SignatureUpdateInterval", 0, RegistryValueKind.DWord);
+            //}
+
+
+
+
+            // TO DO
+            // https://softwareg.com.au/blogs/internet-security/how-to-stop-security-intelligence-update-for-windows-defender-antivirus?srsltid=AfmBOoqalLhPWrOEN5Nr83FwKNihrSgwn-r2ECizoRefQ2eUCx1goKBh
 
             // Disable access to Windows Update GUI
             using (RegistryKey key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64)
